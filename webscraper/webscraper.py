@@ -15,14 +15,31 @@ def main():
     ingredients = []
     reasons = []
 
-    for idx, row in enumerate(table.findAll('b')):
-        row_text_list = row.text.split(".")
-
-        for x in row_text_list:
-            if(x != ""):
-                ingredients.append(x.lstrip())
-    df = pd.DataFrame(ingredients)
-    df.to_csv('ingredients.csv', index=False)
+    for idx, row in enumerate(table.findAll('p')):
+        if(idx < 2):
+            pass
+        elif(idx == 2):
+            for i in row.findAll('b'):
+                row_text_list = i.text.split(".")
+                for x in row_text_list:
+                    if(x != ""):
+                        ingredients.append(x.lstrip())
+        elif(idx == 3):
+            reasons.append(row.text)
+        elif(idx == 227):
+            break
+        else:
+            for i in row.find('br').next_siblings:
+                exp = i
+            for i in row.findAll('b'):
+                row_text_list = i.text.split(".")
+                for x in row_text_list:
+                    if(x != ""):
+                        ingredients.append(x.lstrip())
+                        reasons.append(exp)
+    df_dict = {"ingredients": ingredients, "reasons": reasons}
+    df = pd.DataFrame(df_dict)
+    df.to_csv('ingredients2.csv', index=False)
 
 if __name__ == '__main__':
     main()
