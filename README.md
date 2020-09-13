@@ -1,4 +1,4 @@
-# HopHacks 2020
+# HopHacks 2020: Ingredient
 
 # Inspiration
 The growing trend towards veganism has incited a need for an easy method to ensure that consumer products ranging from food, to makeup, to medicine, do not contain any non-vegan ingredients. Many of these ingredients are highly inconspicuous--isinglass, lactic acid, anyone?--let alone difficult to commit to memory.
