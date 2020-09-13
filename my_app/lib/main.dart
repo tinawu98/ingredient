@@ -1,10 +1,11 @@
 import 'dart:async';
 import 'dart:io';
-
+import 'package:csv/csv.dart';
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:path/path.dart' show join;
 import 'package:path_provider/path_provider.dart';
+import 'package:flutter/services.dart' show rootBundle;
 
 Future<void> main() async {
   // Ensure that plugin services are initialized so that `availableCameras()`
@@ -16,6 +17,9 @@ Future<void> main() async {
 
   // Get a specific camera from the list of available cameras.
   final firstCamera = cameras.first;
+
+  final myData = await rootBundle.loadString("assets/ingredients.csv");
+  List<List<dynamic>> csvTable = CsvToListConverter().convert(myData);
 
   runApp(
     MaterialApp(
@@ -149,6 +153,22 @@ class DisplayPictureScreen extends StatelessWidget {
     );
   }
 
+  bool checkVegan(String ingredient) {
+    if(ingredient.compareTo("Gelatin") == 0){
+      return false;
+    }
+    if(ingredient.compareTo("Lactic Acid") == 0){
+      return false;
+    }
+  }
+
+  Widget _buildChild(){
+    if (checkVegan("Gelatin")) {
+      return new Vegan();
+    }
+    return new NonVegan();
+  }
+
   Widget _buildImage(BuildContext context) {
     return Stack(
       children: <Widget>[
@@ -163,7 +183,8 @@ class DisplayPictureScreen extends StatelessWidget {
               onPressed: () {
                 Navigator.push(context,
                   new MaterialPageRoute(
-                      builder: (context) => new Vegan()), //CHANGE LATER
+                      builder: (context) => _buildChild()
+                  ), //CHANGE LATER
                 );
               },
               color: new Color(0xffc3d2d5),
@@ -199,9 +220,9 @@ class Vegan extends StatelessWidget{
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget> [
-          Text('This product is vegan!',
+          Center(child: Text('This product is vegan!',
               style: TextStyle(fontSize: 36.0),
-              textAlign: TextAlign.center),
+              textAlign: TextAlign.center)),
             SizedBox(height: 10),
             FlatButton(
           color: new Color(0xffc3d2d5),
@@ -247,10 +268,10 @@ class NonVegan extends StatelessWidget{
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget> [
-            Text('This product is NOT vegan.',
+            Center(child: Text('This product is NOT vegan.',
               style: TextStyle(fontSize: 36.0),
               textAlign: TextAlign.center
-            ),
+            )),
             SizedBox(height: 10),
             FlatButton(
               color: new Color(0xffc3d2d5),
