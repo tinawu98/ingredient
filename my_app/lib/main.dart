@@ -318,9 +318,12 @@ class NonVegan extends StatelessWidget{
                 style: TextStyle(fontSize: 20.0),
               ),
             ),
+            SizedBox(height: 10),
             Text(
-                "Non-vegan ingredients:"
-              ),
+                "Non-vegan ingredients:",
+                style: TextStyle(fontSize: 20.0),
+
+    ),
             Text(
                 ingredient //INSERT NON VEGAN INGREDIENTS
               ),
