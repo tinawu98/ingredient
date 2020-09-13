@@ -19,7 +19,7 @@ Future<void> main() async {
   // Get a specific camera from the list of available cameras.
   final firstCamera = cameras.first;
 
-  final myData = await rootBundle.loadString("assets/ingredients2.csv");
+  final myData = await rootBundle.loadString("assets/ingredients.csv");
   List<List<dynamic>> csvTable = CsvToListConverter().convert(myData);
   List<String> stuffs = csvTable[0][0].split('\n');
 
@@ -36,6 +36,7 @@ Future<void> main() async {
       home: TakePictureScreen(
         // Pass the appropriate camera to the TakePictureScreen widget.
         camera: firstCamera,
+        stuff: stuffs,
       ),
     ),
   );
@@ -44,10 +45,12 @@ Future<void> main() async {
 // A screen that allows users to take a picture using a given camera.
 class TakePictureScreen extends StatefulWidget {
   final CameraDescription camera;
+  final List<String> stuff;
 
   const TakePictureScreen({
     Key key,
     @required this.camera,
+    @required this.stuff,
   }) : super(key: key);
 
   @override
@@ -126,7 +129,9 @@ class TakePictureScreenState extends State<TakePictureScreen> {
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => DisplayPictureScreen(imagePath: path),
+                builder: (context) => DisplayPictureScreen(imagePath: path,
+                stuffs : widget.stuff,
+                ),
               ),
             );
           } catch (e) {
@@ -142,8 +147,9 @@ class TakePictureScreenState extends State<TakePictureScreen> {
 // A widget that displays the picture taken by the user.
 class DisplayPictureScreen extends StatelessWidget {
   final String imagePath;
+  final List<String> stuffs;
 
-  const DisplayPictureScreen({Key key, this.imagePath}) : super(key: key);
+  const DisplayPictureScreen({Key key, this.imagePath, this.stuffs}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -156,11 +162,10 @@ class DisplayPictureScreen extends StatelessWidget {
   }
 
   bool checkVegan(String ingredient) {
-    if(ingredient.toLowerCase().compareTo("gelatin") == 0){
-      return false;
-    }
-    if(ingredient.toLowerCase().compareTo("lactic acid") == 0){
-      return false;
+    for(String non_vegan in stuffs) {
+      if(ingredient.toLowerCase().compareTo(non_vegan.toLowerCase()) == 0){
+        return false;
+      }
     }
     return true;
   }
@@ -190,8 +195,9 @@ class DisplayPictureScreen extends StatelessWidget {
                   for (TextElement element in line.elements) {
                       // Same getters as TextBlock
                       String word  = element.text.replaceAll(new RegExp(r"[^A-Za-z0-9]+"), "");
-                    if(!checkVegan(word))
-                      return new NonVegan(ingredient: word);
+                      if(!checkVegan(word)) {
+                        return new NonVegan(ingredient: word);
+                    }
                     }
                   }
                 }
