@@ -160,13 +160,15 @@ class DisplayPictureScreen extends StatelessWidget {
     if(ingredient.compareTo("Lactic Acid") == 0){
       return false;
     }
+    return true;
   }
 
   Widget _buildChild(){
-    if (checkVegan("Gelatin")) {
+    String str = "Gelatin";
+    if (checkVegan(str)) {
       return new Vegan();
     }
-    return new NonVegan();
+    return new NonVegan(ingredient: str);
   }
 
   Widget _buildImage(BuildContext context) {
@@ -249,6 +251,10 @@ class Vegan extends StatelessWidget{
 
 //A widget that displays if the ingredient list is NOT vegan
 class NonVegan extends StatelessWidget{
+  final String ingredient;
+
+  NonVegan({Key key, @required this.ingredient}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -295,7 +301,7 @@ class NonVegan extends StatelessWidget{
                 "Non-vegan ingredients:"
               ),
             Text(
-                "" //INSERT NON VEGAN INGREDIENTS
+                ingredient //INSERT NON VEGAN INGREDIENTS
               ),
           ],
         )
