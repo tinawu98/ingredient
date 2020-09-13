@@ -19,8 +19,9 @@ Future<void> main() async {
   // Get a specific camera from the list of available cameras.
   final firstCamera = cameras.first;
 
-  final myData = await rootBundle.loadString("assets/ingredients.csv");
+  final myData = await rootBundle.loadString("assets/ingredients2.csv");
   List<List<dynamic>> csvTable = CsvToListConverter().convert(myData);
+  List<String> stuffs = csvTable[0][0].split('\n');
 
   runApp(
     MaterialApp(
@@ -188,9 +189,9 @@ class DisplayPictureScreen extends StatelessWidget {
                     // Same getters as TextBlock
                   for (TextElement element in line.elements) {
                       // Same getters as TextBlock
-                      String word  = element.text.replaceAll(new RegExp(r"[^a-z0-9]+"), "");
+                      String word  = element.text.replaceAll(new RegExp(r"[^A-Za-z0-9]+"), "");
                     if(!checkVegan(word))
-                      return new NonVegan(ingredient: element.text);
+                      return new NonVegan(ingredient: word);
                     }
                   }
                 }
