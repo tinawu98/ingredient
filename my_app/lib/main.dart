@@ -155,17 +155,17 @@ class DisplayPictureScreen extends StatelessWidget {
   }
 
   bool checkVegan(String ingredient) {
-    if(ingredient.compareTo("Gelatin") == 0){
+    if(ingredient.toLowerCase().compareTo("gelatin") == 0){
       return false;
     }
-    if(ingredient.compareTo("Lactic Acid") == 0){
+    if(ingredient.toLowerCase().compareTo("lactic acid") == 0){
       return false;
     }
     return true;
   }
 
   Future<VisionText> getVisionText() async {
-    final FirebaseVisionImage visionImage = FirebaseVisionImage.fromFile(File(path));
+    final FirebaseVisionImage visionImage = FirebaseVisionImage.fromFile(File(imagePath));
     final TextRecognizer cloudTextRecognizer = FirebaseVision.instance.cloudTextRecognizer();
     final VisionText visionText = await cloudTextRecognizer.processImage(visionImage);
     return visionText;
@@ -188,7 +188,8 @@ class DisplayPictureScreen extends StatelessWidget {
                     // Same getters as TextBlock
                   for (TextElement element in line.elements) {
                       // Same getters as TextBlock
-                    if(!checkVegan(element.text))
+                      String word  = element.text.replaceAll(new RegExp(r"[^a-z0-9]+"), "");
+                    if(!checkVegan(word))
                       return new NonVegan(ingredient: element.text);
                     }
                   }
