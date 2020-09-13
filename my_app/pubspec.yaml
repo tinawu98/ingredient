@@ -47,7 +47,7 @@ flutter:
   uses-material-design: true
 
   # To add assets to your application, add an assets section, like this:
-   assets:
+  assets:
      - images/coco.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
@@ -61,7 +61,13 @@ flutter:
   # "family" key with the font family name, and a "fonts" key with a
   # list giving the asset and other descriptors for the font. For
   # example:
-  # fonts:
+  fonts:
+      - family: Raleway
+        fonts:
+          - asset: fonts/Raleway-Regular.ttf
+          - asset: fonts/Raleway-Bold.ttf
+          - asset: fonts/Raleway-Italic-VariableFont_wght.ttf
+            style: italic
   #   - family: Schyler
   #     fonts:
   #       - asset: fonts/Schyler-Regular.ttf
