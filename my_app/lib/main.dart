@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:path/path.dart' show join;
 import 'package:path_provider/path_provider.dart';
 import 'package:flutter/services.dart' show rootBundle;
+import 'package:firebase_ml_vision/firebase_ml_vision.dart';
 
 Future<void> main() async {
   // Ensure that plugin services are initialized so that `availableCameras()`
@@ -163,12 +164,32 @@ class DisplayPictureScreen extends StatelessWidget {
     return true;
   }
 
-  Widget _buildChild(){
-    String str = "Gelatin";
-    if (checkVegan(str)) {
-      return new Vegan();
+  Future getVisionText() async {
+    final FirebaseVisionImage visionImage = FirebaseVisionImage.fromFile(File(path));
+    final TextRecognizer cloudTextRecognizer = FirebaseVision.instance.cloudTextRecognizer();
+    final VisionText visionText = await cloudTextRecognizer.processImage(visionImage);
+    return visionText;
+  }
+
+  Widget _buildChild() {
+    VisionText visionText = getVisionText();
+    String text = visionText.text;
+    for (TextBlock block in visionText.blocks) {
+      final Rect boundingBox = block.boundingBox;
+      final List<Offset> cornerPoints = block.cornerPoints;
+      final String text = block.text;
+      final List<RecognizedLanguage> languages = block.recognizedLanguages;
+
+      for (TextLine line in block.lines) {
+        // Same getters as TextBlock
+      for (TextElement element in line.elements) {
+          // Same getters as TextBlock
+        if(!checkVegan(element.text))
+          return new NonVegan(ingredient: element.text);
+        }
+      }
     }
-    return new NonVegan(ingredient: str);
+    return new Vegan();
   }
 
   Widget _buildImage(BuildContext context) {
