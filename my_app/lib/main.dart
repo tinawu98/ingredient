@@ -164,32 +164,41 @@ class DisplayPictureScreen extends StatelessWidget {
     return true;
   }
 
-  Future getVisionText() async {
+  Future<VisionText> getVisionText() async {
     final FirebaseVisionImage visionImage = FirebaseVisionImage.fromFile(File(path));
     final TextRecognizer cloudTextRecognizer = FirebaseVision.instance.cloudTextRecognizer();
     final VisionText visionText = await cloudTextRecognizer.processImage(visionImage);
     return visionText;
   }
 
-  Widget _buildChild() {
-    VisionText visionText = getVisionText();
-    String text = visionText.text;
-    for (TextBlock block in visionText.blocks) {
-      final Rect boundingBox = block.boundingBox;
-      final List<Offset> cornerPoints = block.cornerPoints;
-      final String text = block.text;
-      final List<RecognizedLanguage> languages = block.recognizedLanguages;
+  Widget _buildChild(){
+    return FutureBuilder<VisionText>(
+        future: getVisionText(),
+        builder: (context, AsyncSnapshot<VisionText> snapshot) {
+          if (snapshot.hasData) {
+            VisionText visionText = snapshot.data;
+            String text = visionText.text;
+            for (TextBlock block in visionText.blocks) {
+                  final Rect boundingBox = block.boundingBox;
+                  final List<Offset> cornerPoints = block.cornerPoints;
+                  final String text = block.text;
+                  final List<RecognizedLanguage> languages = block.recognizedLanguages;
 
-      for (TextLine line in block.lines) {
-        // Same getters as TextBlock
-      for (TextElement element in line.elements) {
-          // Same getters as TextBlock
-        if(!checkVegan(element.text))
-          return new NonVegan(ingredient: element.text);
+                  for (TextLine line in block.lines) {
+                    // Same getters as TextBlock
+                  for (TextElement element in line.elements) {
+                      // Same getters as TextBlock
+                    if(!checkVegan(element.text))
+                      return new NonVegan(ingredient: element.text);
+                    }
+                  }
+                }
+                return new Vegan();
+          } else {
+            return CircularProgressIndicator();
+          }
         }
-      }
-    }
-    return new Vegan();
+    );
   }
 
   Widget _buildImage(BuildContext context) {
