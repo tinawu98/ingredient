@@ -73,9 +73,10 @@ class DisplayPictureScreen extends StatelessWidget {
               }
             }
             if (veg) {
-              return new Vegan();
+              return new Vegan(ingredients: ingrs);
             } else {
-              return new NonVegan(ingredient: non_veg_ingrs);
+              return new NonVegan(
+                  nonVegIngr: non_veg_ingrs, ingredients: ingrs);
             }
           } else {
             return CircularProgressIndicator();

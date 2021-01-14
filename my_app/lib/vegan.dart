@@ -3,6 +3,9 @@ import 'ingrlist.dart';
 
 //A widget that displays if the ingredient list IS VEGAN
 class Vegan extends StatelessWidget {
+  final List<String> ingredients;
+  Vegan({Key key, @required this.ingredients}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -37,7 +40,8 @@ class Vegan extends StatelessWidget {
               onPressed: () {
                 Navigator.push(
                   context,
-                  new MaterialPageRoute(builder: (context) => new IngrList()),
+                  new MaterialPageRoute(
+                      builder: (context) => new IngrList(ingrs: ingredients)),
                 );
               },
               child: Text("See ingredient list",

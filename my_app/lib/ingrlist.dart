@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 
 //A widget that displays the ingredient list
 class IngrList extends StatelessWidget {
+  final List<String> ingrs;
+  IngrList({Key key, @required this.ingrs}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -20,7 +23,7 @@ class IngrList extends StatelessWidget {
         ),
         body: Column(
           children: <Widget>[
-            Text('INSERT LIST OF INGREDIENTS') //INSERT LIST OF INGREDIENTS
+            Text(ingrs.join(', ')) //INSERT LIST OF INGREDIENTS
           ],
         ));
   }

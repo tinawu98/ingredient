@@ -3,9 +3,11 @@ import 'ingrlist.dart';
 
 //A widget that displays if the ingredient list is NOT vegan
 class NonVegan extends StatelessWidget {
-  final List<String> ingredient;
+  final List<String> nonVegIngr;
+  final List<String> ingredients;
 
-  NonVegan({Key key, @required this.ingredient}) : super(key: key);
+  NonVegan({Key key, @required this.nonVegIngr, @required this.ingredients})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -41,7 +43,8 @@ class NonVegan extends StatelessWidget {
               onPressed: () {
                 Navigator.push(
                   context,
-                  new MaterialPageRoute(builder: (context) => new IngrList()),
+                  new MaterialPageRoute(
+                      builder: (context) => new IngrList(ingrs: ingredients)),
                 );
               },
               child: Text(
@@ -54,8 +57,7 @@ class NonVegan extends StatelessWidget {
               "Non-vegan ingredients:",
               style: TextStyle(fontSize: 20.0),
             ),
-            Text(ingredient.join(', ') //INSERT NON VEGAN INGREDIENTS
-                ),
+            Text(nonVegIngr.join(', ')),
           ],
         ));
   }
